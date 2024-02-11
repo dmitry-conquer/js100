@@ -11,7 +11,18 @@ const successCopyLabel = document.getElementById('success-copy');
 
 const startStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
+const checkCases = finalStr => {
+  if (isLowerCase.checked && !isUpperCase.checked) {
+    return finalStr.toLowerCase();
+  }
+  if (!isLowerCase.checked && isUpperCase.checked) {
+    return finalStr.toUpperCase();
+  }
+  return finalStr;
+};
+
 const generateRules = () => {
+  let finalStr = startStr;
   const rules = [
     {
       isNeeded: containsSymbols.checked,
@@ -26,22 +37,12 @@ const generateRules = () => {
       str: '0123456789',
     },
   ];
-  let newStr = startStr;
-  let finalStr = '';
   rules.forEach(option => {
     if (option.isNeeded) {
-      newStr += option.str;
+      finalStr += option.str;
     }
   });
-
-  if (isLowerCase.checked && isUpperCase.checked) {
-    finalStr = newStr;
-  } else if (isLowerCase.checked && !isUpperCase.checked) {
-    finalStr = newStr.toLowerCase();
-  } else {
-    finalStr = newStr.toUpperCase();
-  }
-  return finalStr;
+  return checkCases(finalStr);
 };
 
 const createPassword = () => {
@@ -49,21 +50,19 @@ const createPassword = () => {
   let password = '';
   for (let i = 0; i < passwordLength.value; i++) {
     password += str.charAt(Math.floor(Math.random() * str.length));
-    passwordContainer.textContent = password;
   }
+  passwordContainer.textContent = password;
 };
 
-generatePasswordBtn.addEventListener('click', () => {
-  createPassword();
-});
-
-copyPasswordBtn.addEventListener('click', () => {
+const copyPassword = () => {
   navigator.clipboard.writeText(passwordContainer.textContent).then(() => {
     successCopyLabel.classList.add('active');
     setTimeout(() => {
       successCopyLabel.classList.remove('active');
     }, 2000);
   });
-});
+};
 
+generatePasswordBtn.addEventListener('click', createPassword);
+copyPasswordBtn.addEventListener('click', copyPassword);
 createPassword();
