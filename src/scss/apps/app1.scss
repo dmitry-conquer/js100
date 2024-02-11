@@ -1,0 +1,10 @@
+@layer components {
+  .grid-item {
+    @apply size-5 shrink-0 border border-gray-200 bg-transparent;
+    user-drag: none;
+    user-select: none;
+  }
+  .row {
+    @apply flex;
+  }
+}
