@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="uk">
+  @@include('components/head.html', { 'title': 'App #5 - Монета' })
+  <body>
+    <div class="blue-gradient flex h-screen w-full items-center justify-center">
+      <div class="container w-[700px] bg-gray-600/30 p-6 backdrop-blur-lg">
+        <h1 class="mb-6 text-center text-2xl font-bold text-white">Монета</h1>
+        <div id="app5" class="flex flex-col items-center justify-center">
+          <div class="perspective group size-[240px] cursor-pointer">
+            <div id="coin" class="preserve-3d relative h-full w-full duration-1000">
+              <div id="heads-side" class="backface-hidden absolute h-full w-full overflow-hidden rounded-full">
+                <img src="./img/app5/heads.svg" alt="heads" class="h-full w-full" />
+              </div>
+              <div id="tails-side" class="rotate-y-180 backface-hidden absolute h-full w-full overflow-hidden rounded-full">
+                <img src="./img/app5/tails.svg" alt="tails" class="h-full w-full" />
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 flex justify-center">
+            <button id="flip" class="rounded-md bg-green-500 px-3 py-2 text-xl font-bold text-white transition-colors hover:bg-green-500/60" type="button">
+              Підкинути монетку
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" crossorigin src="./js/app.min.js"></script>
+  </body>
+</html>

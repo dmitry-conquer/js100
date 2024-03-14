@@ -1,12 +1,18 @@
 import QRCode from 'qrcode';
 
 export default class {
-  constructor() {
+  constructor(appId) {
+    this.app = document.getElementById(appId);
     this.container = document.querySelector('#qr img');
-    this.download = document.getElementById('download');
-    this.inputField = document.getElementById('input-field');
-    this.initListeners();
-    this.generateQRCode();
+    this.download = document.querySelector('#download');
+    this.inputField = document.querySelector('#input-field');
+  }
+
+  init() {
+    if (this.app && this.container && this.download && this.inputField) {
+      this.initListeners();
+      this.generateQRCode();
+    }
   }
 
   generateQRCode() {
@@ -23,7 +29,6 @@ export default class {
     };
     QRCode.toDataURL(value || 'https://www.google.com.ua/', options)
       .then(url => {
-        console.log(url);
         this.container.src = url;
         this.download.href = url;
       })
