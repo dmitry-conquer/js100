@@ -28,6 +28,9 @@
     "no-plusplus": "off",
     "arrow-parens": "off",
     "class-methods-use-this": "off",
-    "import/no-extraneous-dependencies": "off"
+    "import/no-extraneous-dependencies": "off",
+    "max-len": "off",
+    "no-continue": "off",
+    "object-curly-newline": "off"
   }
 }

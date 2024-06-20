@@ -13,7 +13,7 @@ export const path = {
       js: `${srcFolder}/js/app.js`,
       json: `${srcFolder}/json/**/*.json`,
       images: [
-         `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp,svg,ico}`,
+         `${srcFolder}/img/**/*.{jpg,jpeg,png,PNG,gif,webp,svg,ico}`,
          `!${srcFolder}/img/svg-to-sprite/**/*.svg`,
       ],
       svg: `${srcFolder}/img/svg-to-sprite/*.svg`,

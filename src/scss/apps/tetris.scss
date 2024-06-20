@@ -1,0 +1,29 @@
+@layer components {
+  #tetris > div {
+    @apply border border-white/50;
+  }
+  .fill {
+    @apply bg-red-600;
+  }
+  .T {
+    @apply bg-red-600;
+  }
+  .L {
+    @apply bg-blue-600;
+  }
+  .J {
+    @apply bg-purple-600;
+  }
+  .O {
+    @apply bg-green-600;
+  }
+  .I {
+    @apply bg-yellow-600;
+  }
+  .S {
+    @apply bg-teal-400;
+  }
+  .Z {
+    @apply bg-red-400;
+  }
+}

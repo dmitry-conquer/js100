@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="uk">
+  @@include('components/head.html', { 'title': 'Before After slider' })
+  <body>
+    <div class="dark-gradient flex h-screen w-full items-center justify-center overflow-hidden">
+      <div class="container">
+        <div id="before-after" class="relative aspect-video max-w-[1500px] overflow-hidden border border-green-400">
+          <div class="before absolute left-0 top-0 z-30 h-full w-1/2 overflow-hidden bg-cover bg-no-repeat">
+            <img src="./img/ba/before_pc.webp" alt="" class="block h-full max-w-none pointer-events-none  select-none " />
+            <div class="pointer absolute right-0 top-0 z-30 h-full w-2 cursor-e-resize bg-violet-500"></div>
+          </div>
+          <div class="after absolute left-0 top-0 h-full w-full bg-cover bg-no-repeat">
+            <img src="./img/ba/after_pc.webp" alt="" class="block h-full max-w-none pointer-events-none select-none" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" crossorigin src="./js/app.min.js"></script>
+  </body>
+</html>

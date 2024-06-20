@@ -6,7 +6,7 @@ module.exports = {
       padding: '1rem',
     },
     fontFamily: {
-      poppins: ['Poppins', 'sans-serif'],
+      ibm: ['IBM Plex Mono', 'monospace'],
     },
   },
   future: {
