@@ -46,6 +46,6 @@ export default class Beforeafter {
   }
 
   #isMobile() {
-    return window.innerWidth <= 768; // Перевірка, чи пристрій є мобільним (наприклад, ширина менша або дорівнює 768px)
+    return window.innerWidth <= 768; 
   }
 }

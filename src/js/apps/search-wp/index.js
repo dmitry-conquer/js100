@@ -1,13 +1,16 @@
 class Search {
   constructor(options = {}) {
-    this.defaults = {};
+    this.defaults = {
+      baseUrl: '',
+    };
     this.settings = { ...this.defaults, ...options };
     this.button = document.getElementById('wp-search-button');
     this.input = document.getElementById('wp-search-input');
     this.results = document.getElementById('wp-search-results');
     this.body = document.getElementById('wp-search-body');
-    this.baseUrl = 'https://mediacomponents.com/wp-json/wp/v2';
+    this.baseUrl = this.settings.baseUrl;
     this.allResults = [];
+    this.searching = false;
     this.init();
   }
 
@@ -33,6 +36,8 @@ class Search {
   }
 
   async #getData() {
+    this.#showMessage('Shearching...');
+
     const postsPromise = this.fetchAllContent('posts');
     const pagesPromise = this.fetchAllContent('pages');
     return Promise.all([postsPromise, pagesPromise])
@@ -50,17 +55,18 @@ class Search {
   }
 
   #render(data) {
-    let template;
     const filteredData = data.filter(post => post.title.rendered.toLowerCase().includes(this.input.value.toLowerCase())).slice(0, 5);
     if (filteredData.length) {
-      template = filteredData.map(article => `<div class="wp-search-item"><a target="_blank" href="${article.link}">${this.#highlightResult(article.title.rendered, this.input.value)}</a></div>`).join('');
+      const template = filteredData.map(article => `<div class="wp-search-item"><a target="_blank" href="${article.link}">${this.#highlightResult(article.title.rendered, this.input.value)}</a></div>`).join('');
+      this.results.innerHTML = template;
     } else {
-      const message = 'No results found.';
-      this.results.innerHTML = '';
-      template = `<div class="wp-search-empty">${message}</div>`;
+      this.#showMessage('No results found.');
     }
-    this.results.innerHTML = template;
     this.#toggleResults();
+  }
+
+  #showMessage(message) {
+    this.results.innerHTML = `<div class="wp-search-empty">${message}</div>`;
   }
 
   #checkEmptyInput() {
@@ -84,16 +90,17 @@ class Search {
   }
 
   #addEventListeners() {
-    this.input.addEventListener('input', () => {
+    this.input?.addEventListener('input', () => {
       this.allResults = [];
       this.#getData();
     });
-
-    this.button.addEventListener('click', () => this.#toogleSearchForm());
+    this.button?.addEventListener('click', () => this.#toogleSearchForm());
     document.addEventListener('click', e => this.#outClickSearchForm(e));
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const searchWp = new Search({});
+  const searchWp = new Search({
+    baseUrl: 'https://mediacomponents.com/wp-json/wp/v2',
+  });
 });
