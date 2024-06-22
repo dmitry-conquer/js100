@@ -1,7 +1,9 @@
-class Search {
+export default class Search {
   constructor(options = {}) {
     this.defaults = {
       baseUrl: '',
+      postTypes: ['posts', 'pages'],
+      showPosts: 6,
     };
     this.settings = { ...this.defaults, ...options };
     this.button = document.getElementById('wp-search-button');
@@ -9,78 +11,76 @@ class Search {
     this.results = document.getElementById('wp-search-results');
     this.body = document.getElementById('wp-search-body');
     this.baseUrl = this.settings.baseUrl;
-    this.allResults = [];
     this.searching = false;
-    this.init();
+    this.#init();
   }
 
-  init() {
+  #init() {
     this.#addEventListeners();
   }
 
-  async fetchAllContent(type) {
-    return fetch(`${this.baseUrl}/${type}?per_page=100`)
+  async #getPostData(type) {
+    return fetch(`${this.baseUrl}/${type}/?per_page=100`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`Network response was not ok for ${type}`);
         }
         return response.json();
       })
-      .then(content => {
-        this.allResults = [...this.allResults, ...content];
-        return content;
-      })
+      .then(content => content)
       .catch(error => {
+        this.#showMessage('Search error!');
         console.error(`Error ${type}:`, error);
       });
   }
 
   async #getData() {
     this.#showMessage('Shearching...');
-
-    const postsPromise = this.fetchAllContent('posts');
-    const pagesPromise = this.fetchAllContent('pages');
-    return Promise.all([postsPromise, pagesPromise])
-      .then(([posts, pages]) => {
-        const allContent = [...posts, ...pages];
+    const promises = [];
+    this.settings.postTypes.forEach(type => {
+      const promise = this.#getPostData(type);
+      promises.push(promise);
+    });
+    Promise.all(promises)
+      .then(content => {
+        const allContent = content.reduce((arr, acc) => [...arr, ...acc]);
         this.#render(allContent);
       })
       .catch(error => {
         console.error('Error:', error);
+        this.#showMessage('Search error!');
       });
   }
 
-  #highlightResult(string, substring) {
-    return string.replace(new RegExp(substring, 'gi'), match => `<b style="color: red;">${match}</b>`);
-  }
-
   #render(data) {
-    const filteredData = data.filter(post => post.title.rendered.toLowerCase().includes(this.input.value.toLowerCase())).slice(0, 5);
+    const filteredData = data.filter(post => post.title.rendered.toLowerCase().includes(this.input.value.toLowerCase())).slice(0, this.settings.showPosts);
     if (filteredData.length) {
       const template = filteredData.map(article => `<div class="wp-search-item"><a target="_blank" href="${article.link}">${this.#highlightResult(article.title.rendered, this.input.value)}</a></div>`).join('');
       this.results.innerHTML = template;
     } else {
       this.#showMessage('No results found.');
     }
-    this.#toggleResults();
+  }
+
+  #highlightResult(string, substring) {
+    return string.replace(new RegExp(substring, 'gi'), match => `<b style="color: red;">${match}</b>`);
   }
 
   #showMessage(message) {
     this.results.innerHTML = `<div class="wp-search-empty">${message}</div>`;
   }
 
-  #checkEmptyInput() {
+  #isSearchEmpty() {
     return this.input.value === '';
   }
 
-  #toggleResults() {
-    if (this.#checkEmptyInput()) {
-      this.results.innerHTML = '';
-    }
+  #clearResults() {
+    this.results.innerHTML = '';
   }
 
   #toogleSearchForm() {
     this.body.classList.toggle('open');
+    this.input?.focus();
   }
 
   #outClickSearchForm(e) {
@@ -91,16 +91,13 @@ class Search {
 
   #addEventListeners() {
     this.input?.addEventListener('input', () => {
-      this.allResults = [];
-      this.#getData();
+      if (!this.#isSearchEmpty()) {
+        this.#getData();
+      } else {
+        this.#clearResults();
+      }
     });
     this.button?.addEventListener('click', () => this.#toogleSearchForm());
     document.addEventListener('click', e => this.#outClickSearchForm(e));
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const searchWp = new Search({
-    baseUrl: 'https://mediacomponents.com/wp-json/wp/v2',
-  });
-});
