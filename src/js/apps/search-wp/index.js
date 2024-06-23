@@ -2,7 +2,7 @@ export default class Search {
   constructor(options = {}) {
     this.defaults = {
       baseUrl: '',
-      postTypes: ['posts', 'pages'],
+      postTypes: ['posts'],
       showPosts: 6,
     };
     this.settings = { ...this.defaults, ...options };
@@ -19,8 +19,8 @@ export default class Search {
     this.#addEventListeners();
   }
 
-  async #getPostData(type) {
-    return fetch(`${this.baseUrl}/${type}/?per_page=100`)
+  async #getPostData(type, search) {
+    return fetch(`${this.baseUrl}/${type}/?search=${search}`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`Network response was not ok for ${type}`);
@@ -34,11 +34,11 @@ export default class Search {
       });
   }
 
-  async #getData() {
+  async #getData(search) {
     this.#showMessage('Shearching...');
     const promises = [];
     this.settings.postTypes.forEach(type => {
-      const promise = this.#getPostData(type);
+      const promise = this.#getPostData(type, search);
       promises.push(promise);
     });
     Promise.all(promises)
@@ -90,9 +90,9 @@ export default class Search {
   }
 
   #addEventListeners() {
-    this.input?.addEventListener('input', () => {
+    this.input?.addEventListener('input', e => {
       if (!this.#isSearchEmpty()) {
-        this.#getData();
+        this.#getData(e.target.value);
       } else {
         this.#clearResults();
       }
