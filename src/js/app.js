@@ -1,13 +1,1 @@
-import Search from './apps/search-wp/index.js';
-
-document.addEventListener('DOMContentLoaded', () => {
-  const searchWp = new Search({
-    baseUrl: `https://${window.location.host}/wp-json/wp/v2`,
-    postTypes: ['posts', 'pages', 'our-work'],
-    showPosts: 10,
-  });
-});
-
-// import Beforeafter from './apps/before-after/before-after.js';
-
-// const beforeAfterSlider = new Beforeafter('before-after');
+const n=document.querySelectorAll(".person-card"),c=e=>{e.querySelectorAll(".lang").forEach(l=>{l.classList.contains("hidden-lang")?l.classList.remove("hidden-lang"):l.classList.add("hidden-lang")})};n.forEach(e=>{if(e){const s=e.querySelector(".toggle-lang");s==null||s.addEventListener("click",()=>c(e))}});

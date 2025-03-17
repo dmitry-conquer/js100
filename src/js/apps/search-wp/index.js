@@ -1,4 +1,4 @@
-export default class Search {
+class Search {
   constructor(options = {}) {
     this.defaults = {
       baseUrl: '',
@@ -101,3 +101,11 @@ export default class Search {
     document.addEventListener('click', e => this.#outClickSearchForm(e));
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchWp = new Search({
+    baseUrl: `https://${window.location.host}/wp-json/wp/v2`,
+    postTypes: ['posts', 'pages', 'our-work'],
+    showPosts: 10,
+  });
+});
